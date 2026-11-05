@@ -76,11 +76,8 @@ h1{font-size:min(34px,8.6vw);letter-spacing:.1em;margin-bottom:3%}
 const stage=document.getElementById('stage'),scene=document.getElementById('scene'),bg=document.getElementById('bg'),hero=document.getElementById('hero'),spot=document.getElementById('spot');
 const IW=1376,IH=768;let W,H,PX=.7;const mob=matchMedia("(max-width:760px),(max-aspect-ratio:1/1)");
 const quotes=[
-"កាន់តែធំ កាន់តែចាយលុយភ្លើន។",
-"លុយចូលដូចទឹកស្ទឹង ចាយចេញដូចភ្លើងឆេះព្រៃ។",
-"កាន់តែមានលុយ កាន់តែមានមិត្តភក្តិ... រហូតដល់អស់លុយ។",
-"ភ្លើងមិនខ្លាចភាពងងឹតទេ ព្រោះវាបង្កើតពន្លឺពីខ្លួនវាផ្ទាល់។",
-"ផ្សែងអាចរសាត់បាត់ តែភ្លើងក្នុងចិត្តនៅតែឆេះ។"
+"កាន់តែធំ កាន់តែចាយលុយភ្លើ",
+"កាន់តែមានលុយ កាន់តែមានមិត្តភក្តិ... រហូតដល់អស់លុយ",
 ];
 let qi=0,timer;
 const seg=window.Intl&&Intl.Segmenter?new Intl.Segmenter('km',{granularity:'grapheme'}):null;
