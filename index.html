@@ -39,13 +39,14 @@ h1{font-family:var(--serif);font-weight:800;color:var(--ember);font-size:clamp(3
 .thumbs button{width:clamp(36px,4vw,56px);aspect-ratio:1;border-radius:50%;border:2px solid #ffffff33;padding:0;overflow:hidden;cursor:pointer;background:#000;transition:transform .3s,border-color .3s}
 .thumbs img{width:100%;height:100%;object-fit:cover;object-position:60% 30%}
 .thumbs button:hover,.thumbs button.on{transform:translateY(-6px) scale(1.08);border-color:var(--ember)}
-.video{position:relative;flex:none;z-index:8;width:clamp(140px,12vw,200px);aspect-ratio:16/10;border-radius:12px;background:linear-gradient(135deg,#3b1204,#a2420e 60%,#1a0a04);border:1px solid #ffffff22;cursor:pointer;display:grid;place-items:center;overflow:hidden;animation:float 5s ease-in-out infinite}
-.video::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0000 0 2px,#0003 2px 3px)}
-@keyframes float{50%{transform:translateY(-8px)}}
-.play{width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;z-index:1;transition:transform .3s}
-.video:hover .play{transform:scale(1.2)}
-.play::after{content:"";border-left:13px solid #111;border-top:8px solid transparent;border-bottom:8px solid transparent;margin-left:4px}
-.video small{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:10px;letter-spacing:.3em;color:#fff9;z-index:1}
+.video{position:relative;flex:none;z-index:8;display:flex;align-items:center;gap:14px;padding:10px 20px 10px 10px;border-radius:99px;background:#0009;border:1px solid #d9621b88;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);cursor:pointer;transition:border-color .3s,box-shadow .3s}
+.video:hover,.video:focus-visible{border-color:var(--ember);box-shadow:0 0 24px #d9621b66}
+.play{width:40px;height:40px;flex:none;border-radius:50%;background:var(--ember);display:grid;place-items:center;transition:transform .3s}
+.video:hover .play{transform:scale(1.12)}
+.play::after{content:"";border-left:12px solid #120a05;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px}
+.vt{display:flex;flex-direction:column;gap:3px;white-space:nowrap}
+.vt b{font-family:var(--serif);font-weight:600;font-size:clamp(13px,1.2vw,16px);color:var(--ink)}
+.vt small{font-size:10px;letter-spacing:.28em;color:var(--dim)}
 @media (max-width:760px),(max-aspect-ratio:1/1){
 .scene{bottom:auto;height:62%;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
 .scene img{object-position:92% 50%}
@@ -54,7 +55,7 @@ h1{font-family:var(--serif);font-weight:800;color:var(--ember);font-size:clamp(3
 .left{left:0;right:0;top:auto;bottom:0;width:auto;padding:0 7% calc(4% + env(safe-area-inset-bottom,0px));justify-content:flex-end}
 h1{font-size:min(34px,8.6vw);letter-spacing:.1em;margin-bottom:3%}
 .quote{max-width:none;font-size:clamp(17px,4.8vw,22px)}.btns{margin-top:4%}
-.row{margin-top:18px;gap:16px;flex-wrap:nowrap}.video{width:130px}
+.row{margin-top:18px;gap:14px;flex-wrap:nowrap;align-items:flex-end}.video{padding:8px 14px 8px 8px;gap:10px}.vt small{letter-spacing:.2em}
 }
 @media (prefers-reduced-motion:reduce){*,.grain{animation:none!important}}
 </style></head><body>
@@ -67,9 +68,9 @@ h1{font-size:min(34px,8.6vw);letter-spacing:.1em;margin-bottom:3%}
  <section class="left">
   <h1>TIT KEUMHEN</h1>
   <p class="quote" id="quote" aria-live="polite"></p>
-  <div class="btns"><button class="btn" id="cta">Join the Family</button><button class="btn" id="ign">Light it up</button></div>
+  <div class="btns"><button class="btn" id="ign">Light it up</button></div>
   <div class="row"><div><div class="cast">The Company</div><div class="thumbs" id="thumbs"></div></div>
-  <section class="video" id="trailer" tabindex="0" role="button" aria-label="Play trailer"><span class="play"></span><small>BIRMINGHAM 1926</small></section></div>
+  <section class="video" id="trailer" tabindex="0" role="button" aria-label="Play trailer"><span class="play"></span><span class="vt"><b>Watch the Trailer</b><small>BIRMINGHAM 1926</small></span></section></div>
  </section>
 </main>
 <script>
@@ -124,6 +125,5 @@ function loop(t){
 requestAnimationFrame(loop);
 document.getElementById('ign').onclick=function(){heat=2.4;stage.animate([{transform:'translate(0,0)'},{transform:'translate(-4px,2px)'},{transform:'translate(3px,-3px)'},{transform:'translate(0,0)'}],{duration:450,iterations:4});const[x,y]=map(.88,.33);burst(x,y);this.textContent='Burning...';
  setTimeout(()=>{heat=1;this.textContent='Light it up'},3500)};
-document.getElementById('cta').onclick=function(){this.textContent='Welcome, brother.';const r=this.getBoundingClientRect();burst(r.left+60,r.top)};
 const v=document.getElementById('trailer');v.onclick=()=>{const r=v.getBoundingClientRect();burst(r.left+r.width/2,r.top+r.height/2)};v.onkeydown=e=>{if(e.key==='Enter'||e.key===' ')v.click()};
 </script></body></html>
