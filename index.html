@@ -1,8 +1,8 @@
-h<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="km"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tit Keumhen</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Special+Elite&family=Moul&family=Koulen&family=Bokor&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Special+Elite&family=Noto+Serif+Khmer:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--ink:#e9dfcf;--dim:#8d826f;--ember:#d9621b;--gold:#c9a45c;--serif:'Playfair Display',Georgia,serif;--type:'Special Elite','Courier New',monospace}
 *{box-sizing:border-box;margin:0}
@@ -20,13 +20,12 @@ canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .spot{position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(circle 280px at var(--mx,70%) var(--my,40%),#ff8a3d22,transparent 70%);mix-blend-mode:screen}
 .vig{position:absolute;inset:0;z-index:6;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,#000c 100%);animation:flick 5s infinite}
 @keyframes flick{46%,100%{opacity:1}48%{opacity:.82}52%{opacity:.9}}
-.brand{position:absolute;z-index:8;left:6%;top:calc(4% + env(safe-area-inset-top,0px));f
- ont-family:var(--serif);font-size:clamp(14px,1.5vw,20px);color:var(--gold);letter-spacing:.14em}
+.brand{position:absolute;z-index:8;left:6%;top:calc(4% + env(safe-area-inset-top,0px));font-family:var(--serif);font-size:clamp(14px,1.5vw,20px);color:var(--gold);letter-spacing:.14em}
 .big{position:absolute;left:1.5%;top:10%;z-index:2;font-family:var(--serif);font-weight:800;font-size:clamp(60px,10vw,150px);line-height:.7;writing-mode:vertical-rl;transform:rotate(180deg);color:transparent;-webkit-text-stroke:1px #ffffff22;letter-spacing:.04em;white-space:nowrap}
 .left{position:absolute;z-index:8;left:9%;top:0;bottom:0;width:min(640px,52%);display:flex;flex-direction:column;justify-content:center;padding:6vh 0}
 h1{font-family:var(--serif);font-weight:800;color:var(--ember);font-size:clamp(30px,min(4.6vw,9vh),68px);line-height:1.05;letter-spacing:.14em;margin-bottom:5%;animation:fl 3s infinite}
 @keyframes fl{0%,100%{text-shadow:0 0 18px #d9621b88}45%{text-shadow:0 0 34px #ff8a3dcc,0 0 4px #ffd08a}50%{text-shadow:0 0 10px #d9621b55}}
-.quote{font-family:'Moul','Koulen','Noto Serif Khmer',serif;font-size:clamp(20px,2.3vw,34px);line-height:1.5;min-height:8.5em;padding-left:18px;border-left:2px solid var(--ember);color:var(--gold);text-shadow:0 0 18px #d9621b66,0 2px 6px #000}
+.quote{font-family:'Noto Serif Khmer','Khmer OS Battambang',serif;font-weight:700;font-size:clamp(20px,2.2vw,32px);line-height:1.6;letter-spacing:0;max-width:15em;text-wrap:balance;word-break:keep-all;padding-left:18px;border-left:2px solid var(--ember);color:var(--gold);text-shadow:0 0 18px #d9621b55,0 2px 6px #000}
 .quote i{display:inline-block;width:2px;height:1em;background:var(--ember);vertical-align:-2px;animation:blink .8s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .btns{margin-top:6%;display:flex;gap:10px;flex-wrap:wrap}
@@ -54,7 +53,7 @@ h1{font-family:var(--serif);font-weight:800;color:var(--ember);font-size:clamp(3
 .big{display:none}.brand{left:7%}
 .left{left:0;right:0;top:auto;bottom:0;width:auto;padding:0 7% calc(4% + env(safe-area-inset-bottom,0px));justify-content:flex-end}
 h1{font-size:min(34px,8.6vw);letter-spacing:.1em;margin-bottom:3%}
-.quote{min-height:7.5em;font-size:clamp(16px,4.6vw,22px)}.btns{margin-top:4%}
+.quote{max-width:none;font-size:clamp(17px,4.8vw,22px)}.btns{margin-top:4%}
 .row{margin-top:18px;gap:16px;flex-wrap:nowrap}.video{width:130px}
 }
 @media (prefers-reduced-motion:reduce){*,.grain{animation:none!important}}
@@ -84,6 +83,7 @@ let qi=0,timer;
 const seg=window.Intl&&Intl.Segmenter?new Intl.Segmenter('km',{granularity:'grapheme'}):null;
 const split=s=>seg?[...seg.segment(s)].map(x=>x.segment):Array.from(s);
 function type(){clearTimeout(timer);const el=document.getElementById('quote'),t=split(quotes[qi]);let c=0;
+ el.style.minHeight='0';el.textContent=quotes[qi];el.style.minHeight=el.offsetHeight+'px';el.textContent='';
  (function step(){if(c<=t.length){el.innerHTML=t.slice(0,c).join('')+'<i></i>';c++;timer=setTimeout(step,45)}else timer=setTimeout(()=>{qi=(qi+1)%quotes.length;type()},4200)})()}
 type();
 const moods=[{f:'none',c:'#d9621b'},{f:'grayscale(1) contrast(1.25) brightness(.92)',c:'#b9b3a8'},{f:'sepia(.9) contrast(1.15) saturate(1.4) brightness(.92)',c:'#c9a45c'}];
