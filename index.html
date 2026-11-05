@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="km"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tit Keumhen</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Special+Elite&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Special+Elite&family=Noto+Serif+Khmer:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:dark;--ink:#e9dfcf;--dim:#8d826f;--ember:#d9621b;--gold:#c9a45c;--serif:'Playfair Display',Georgia,serif;--type:'Special Elite','Courier New',monospace}
 *{box-sizing:border-box;margin:0}
@@ -25,7 +25,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .left{position:absolute;z-index:8;left:9%;top:0;bottom:0;width:min(500px,44%);display:flex;flex-direction:column;justify-content:center;padding:6vh 0}
 h1{font-family:var(--serif);font-weight:800;color:var(--ember);font-size:clamp(30px,min(4.6vw,9vh),68px);line-height:1.05;letter-spacing:.14em;margin-bottom:5%;animation:fl 3s infinite}
 @keyframes fl{0%,100%{text-shadow:0 0 18px #d9621b88}45%{text-shadow:0 0 34px #ff8a3dcc,0 0 4px #ffd08a}50%{text-shadow:0 0 10px #d9621b55}}
-.quote{font-size:clamp(12px,1.15vw,16px);line-height:1.7;min-height:5.2em;padding-left:14px;border-left:1px solid var(--ember)}
+.quote{font-family:'Noto Serif Khmer','Special Elite',serif;font-size:clamp(13px,1.25vw,18px);line-height:1.9;min-height:6em;padding-left:14px;border-left:1px solid var(--ember)}
 .quote i{display:inline-block;width:2px;height:1em;background:var(--ember);vertical-align:-2px;animation:blink .8s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .btns{margin-top:6%;display:flex;gap:10px;flex-wrap:wrap}
@@ -53,7 +53,7 @@ h1{font-family:var(--serif);font-weight:800;color:var(--ember);font-size:clamp(3
 .big{display:none}.brand{left:7%}
 .left{left:0;right:0;top:auto;bottom:0;width:auto;padding:0 7% calc(4% + env(safe-area-inset-bottom,0px));justify-content:flex-end}
 h1{font-size:min(34px,8.6vw);letter-spacing:.1em;margin-bottom:3%}
-.quote{min-height:3.6em}.btns{margin-top:4%}
+.quote{min-height:5.8em;font-size:14px}.btns{margin-top:4%}
 .row{margin-top:18px;gap:16px;flex-wrap:nowrap}.video{width:130px}
 }
 @media (prefers-reduced-motion:reduce){*,.grain{animation:none!important}}
@@ -75,10 +75,18 @@ h1{font-size:min(34px,8.6vw);letter-spacing:.1em;margin-bottom:3%}
 <script>
 const stage=document.getElementById('stage'),scene=document.getElementById('scene'),bg=document.getElementById('bg'),hero=document.getElementById('hero'),spot=document.getElementById('spot');
 const IW=1376,IH=768;let W,H,PX=.7;const mob=matchMedia("(max-width:760px),(max-aspect-ratio:1/1)");
-const quotes=["By order of the Peaky Blinders.","I don’t pay for suits. My suits are on the house.","Fortune favours the brave, so they say. I favour the ruthless.","Out of the smoke and the dark of Small Heath, a family rises."];
+const quotes=[
+"កាន់តែធំ កាន់តែចាយលុយភ្លើន។",
+"លុយចូលដូចទឹកស្ទឹង ចាយចេញដូចភ្លើងឆេះព្រៃ។",
+"កាន់តែមានលុយ កាន់តែមានមិត្តភក្តិ... រហូតដល់អស់លុយ។",
+"ភ្លើងមិនខ្លាចភាពងងឹតទេ ព្រោះវាបង្កើតពន្លឺពីខ្លួនវាផ្ទាល់។",
+"ផ្សែងអាចរសាត់បាត់ តែភ្លើងក្នុងចិត្តនៅតែឆេះ។"
+];
 let qi=0,timer;
-function type(){clearTimeout(timer);const el=document.getElementById('quote'),t=quotes[qi];let c=0;
- (function step(){if(c<=t.length){el.innerHTML=t.slice(0,c)+'<i></i>';c++;timer=setTimeout(step,34)}else timer=setTimeout(()=>{qi=(qi+1)%quotes.length;type()},4200)})()}
+const seg=window.Intl&&Intl.Segmenter?new Intl.Segmenter('km',{granularity:'grapheme'}):null;
+const split=s=>seg?[...seg.segment(s)].map(x=>x.segment):Array.from(s);
+function type(){clearTimeout(timer);const el=document.getElementById('quote'),t=split(quotes[qi]);let c=0;
+ (function step(){if(c<=t.length){el.innerHTML=t.slice(0,c).join('')+'<i></i>';c++;timer=setTimeout(step,45)}else timer=setTimeout(()=>{qi=(qi+1)%quotes.length;type()},4200)})()}
 type();
 const moods=[{f:'none',c:'#d9621b'},{f:'grayscale(1) contrast(1.25) brightness(.92)',c:'#b9b3a8'},{f:'sepia(.9) contrast(1.15) saturate(1.4) brightness(.92)',c:'#c9a45c'}];
 const th=document.getElementById('thumbs');
