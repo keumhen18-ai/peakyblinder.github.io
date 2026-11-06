@@ -42,13 +42,20 @@ button { font: inherit; color: inherit; }
   align-items: center;
   gap: 22px;
   padding: 10px 14px 10px 20px;
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: rgba(8, 10, 12, .55);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  background: transparent;
   width: min(920px, calc(100% - 24px));
   justify-content: space-between;
+  pointer-events: none;
+  transition: background .35s, border-color .35s, backdrop-filter .35s, -webkit-backdrop-filter .35s;
+}
+.nav > * { pointer-events: auto; }
+.nav.solid {
+  border-color: var(--line);
+  background: rgba(8, 10, 12, .7);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
 }
 .logo {
   font-family: var(--disp);
@@ -337,50 +344,6 @@ h1::after { color: #ff2bd6; animation: g2 5s infinite; }
 .btn:hover, .btn:focus-visible { color: #120a05; box-shadow: 0 0 30px rgba(255,106,31,.6); }
 .btn:hover::before, .btn:focus-visible::before { transform: none; }
 
-/* Watch the Trailer button */
-.trailer {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  padding: 8px 22px 8px 8px;
-  border-radius: 999px;
-  border: 1px solid rgba(55,230,255,.4);
-  background: rgba(10,16,20,.6);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  cursor: pointer;
-  transition: border-color .3s, box-shadow .3s, transform .2s;
-}
-.trailer:hover { border-color: var(--cy); box-shadow: 0 0 30px rgba(55,230,255,.35); }
-.play {
-  position: relative;
-  width: 44px; height: 44px;
-  flex: none;
-  border-radius: 50%;
-  background: var(--ember);
-  display: grid;
-  place-items: center;
-}
-.play::before {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1px solid var(--ember);
-  animation: rp 2s infinite;
-}
-@keyframes rp { to { transform: scale(1.5); opacity: 0; } }
-.play::after {
-  content: "";
-  border-left: 13px solid #120a05;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  margin-left: 3px;
-}
-.vt { display: flex; flex-direction: column; gap: 3px; text-align: left; white-space: nowrap; }
-.vt b { font-family: var(--disp); font-weight: 500; font-size: 12px; letter-spacing: .05em; }
-.vt small { font-size: 10px; letter-spacing: .26em; color: var(--cy); }
-
 .moods { margin-top: 30px; display: flex; align-items: center; gap: 14px; }
 .moods span { font-size: 10px; letter-spacing: .28em; color: var(--dim); text-transform: uppercase; }
 .moods button {
@@ -464,6 +427,212 @@ h1::after { color: #ff2bd6; animation: g2 5s infinite; }
   animation: mq 40s linear infinite;
 }
 @keyframes mq { to { transform: translateX(-100%); } }
+
+/* bento about */
+.bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 44px; }
+.bx {
+  position: relative;
+  overflow: hidden;
+  min-height: 190px;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.01));
+  transform-style: preserve-3d;
+  transition: border-color .3s, box-shadow .3s;
+}
+.bx::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(280px circle at var(--gx, 50%) var(--gy, 0%), rgba(255,106,31,.16), transparent 60%);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.bx:hover { border-color: rgba(255,106,31,.5); box-shadow: 0 24px 50px rgba(0,0,0,.5); }
+.bx:hover::before { opacity: 1; }
+.bx h3 { font-family: var(--disp); font-weight: 500; font-size: clamp(16px, 1.6vw, 20px); letter-spacing: .03em; }
+.bx p { font-size: 13px; line-height: 1.8; color: var(--dim); }
+.bx .ico { margin-bottom: auto; padding-bottom: 14px; font-size: 38px; line-height: 1; align-self: flex-start; animation: float 3.4s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-7px); } }
+.b-about { grid-column: span 2; grid-row: span 2; background: radial-gradient(420px circle at 85% 0%, rgba(255,106,31,.25), transparent 60%), linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.01)); }
+.b-about h3 { font-size: clamp(22px, 3vw, 36px); color: var(--ember); }
+.b-about p.lede { font-size: clamp(15px, 1.7vw, 20px); color: var(--ink); line-height: 1.7; }
+.chip { align-self: flex-start; padding: 5px 12px; border: 1px solid var(--cy); border-radius: 999px; color: var(--cy); font-size: 10px; letter-spacing: .26em; text-transform: uppercase; margin-bottom: auto; }
+.b-about { overflow: hidden; }
+.b-about .me {
+  position: absolute;
+  right: -3%; bottom: 0;
+  height: 82%;
+  width: auto;
+  max-width: 62%;
+  object-fit: contain;
+  object-position: bottom right;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(#000 78%, transparent);
+  mask-image: linear-gradient(#000 78%, transparent);
+  pointer-events: none;
+}
+.about-txt { position: relative; z-index: 1; text-shadow: 0 2px 10px #000, 0 0 18px #000; max-width: 56%; display: flex; flex-direction: column; gap: 8px; }
+.facts { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-direction: column; gap: 6px; font-size: 12px; letter-spacing: .06em; color: var(--gold); }
+.chip { position: relative; z-index: 1; }
+@media (max-width: 900px) { .bento .b-about { min-height: 300px; } .b-about .me { height: 84%; max-width: 50%; } }
+@media (max-width: 520px) {
+  .bento .b-about { min-height: 300px; padding: 22px; }
+  .b-about .me { height: 80%; max-width: 48%; right: -4%; }
+  .about-txt { max-width: 60%; gap: 6px; }
+  .bento .b-about h3 { font-size: 22px; }
+  .bento .b-about p.lede { font-size: 13px; line-height: 1.6; }
+  .facts { font-size: 11px; margin-top: 6px; }
+}
+
+
+/* about card motion */
+@property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.b-about::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  z-index: 2;
+  background: conic-gradient(from var(--a), transparent 0 68%, var(--ember), var(--cy), transparent);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spinA 5s linear infinite;
+}
+@keyframes spinA { to { --a: 360deg; } }
+.b-about .blob {
+  position: absolute;
+  right: 4%; bottom: 8%;
+  width: 52%; aspect-ratio: 1;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 40% 40%, rgba(255,106,31,.5), rgba(55,230,255,.18) 55%, transparent 70%);
+  filter: blur(28px);
+  animation: morph 7s ease-in-out infinite;
+}
+@keyframes morph { 0%, 100% { transform: scale(.9) translate(0, 0); } 50% { transform: scale(1.12) translate(-6%, -5%); } }
+.b-about .tok {
+  position: absolute;
+  z-index: 1;
+  font-size: 12px;
+  color: var(--cy);
+  text-shadow: 0 0 10px var(--cy);
+  opacity: .75;
+  pointer-events: none;
+  animation: drift 5s ease-in-out infinite;
+}
+.tok.t1 { right: 6%; top: 16%; }
+.tok.t2 { right: 40%; top: 10%; animation-delay: -1.5s; color: var(--ember); text-shadow: 0 0 10px var(--ember); }
+.tok.t3 { right: 4%; top: 52%; animation-delay: -3s; }
+.tok.t4 { right: 38%; top: 46%; animation-delay: -2.2s; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+@keyframes drift { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-12px) rotate(5deg); } }
+#aName {
+  background: linear-gradient(100deg, var(--ember) 40%, #ffe0a8 50%, var(--ember) 60%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 3.6s linear infinite;
+}
+@keyframes shine { to { background-position: -150% 0; } }
+.b-about.in .about-txt > * { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+.b-about.in .about-txt > :nth-child(2) { animation-delay: .15s; }
+.b-about.in .about-txt > :nth-child(3) { animation-delay: .3s; }
+.b-about.in .about-txt > :nth-child(1) { animation: rise .8s cubic-bezier(.2,.7,.2,1) both, shine 3.6s linear infinite; }
+@keyframes rise { from { opacity: 0; transform: translateY(22px); filter: blur(6px); } }
+.b-about.in .me { animation: pop 1.1s cubic-bezier(.2,.7,.2,1) both, bob 6s ease-in-out 1.2s infinite; }
+@keyframes pop { from { opacity: 0; transform: translateY(40px) scale(.93); } }
+@keyframes bob { 50% { transform: translateY(-8px); } }
+.facts li:last-child::after { content: "▍"; margin-left: 6px; color: var(--cy); animation: blink .9s steps(1) infinite; }
+.cur-t { display: inline-block; width: 2px; height: 1em; margin-left: 2px; vertical-align: -2px; background: var(--cy); box-shadow: 0 0 8px var(--cy); animation: blink .8s steps(1) infinite; }
+
+.codebg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: .24;
+  -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(transparent, #000 14%, #000 86%, transparent);
+}
+.codebg .ci { padding: 0 26px; animation: codeUp 26s linear infinite; }
+.codebg pre { margin: 0; font: inherit; font-size: 11px; line-height: 1.9; white-space: pre; color: var(--dim); }
+.codebg .k { color: var(--ember); }
+.codebg .s { color: var(--gold); }
+.codebg .f { color: var(--cy); }
+.codebg .n { color: #ff8ad8; }
+.codebg .c { color: #5f6b74; }
+@keyframes codeUp { to { transform: translateY(-50%); } }
+/* other tiles: each has its own motion */
+.bx:not(.b-about).in h3, .bx:not(.b-about).in p { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+.bx:not(.b-about).in p { animation-delay: .12s; }
+/* games: arcade */
+.g-hud { position: absolute; top: 24px; right: 24px; text-align: right; font-size: 10px; letter-spacing: .2em; line-height: 2; color: var(--cy); }
+.g-hud .hp { display: block; color: #ff4d6d; animation: blink 1.4s steps(1) infinite; }
+.g-hud .ps { display: block; animation: blink 1s steps(1) infinite; }
+.b-game::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0 1px, transparent 1px 3px); animation: crt 3s steps(2) infinite; }
+@keyframes crt { 50% { opacity: .35; } }
+.b-game:hover .ico { animation: shake .35s linear infinite; }
+@keyframes shake { 25% { transform: translate(-3px, 2px) rotate(-6deg); } 75% { transform: translate(3px, -2px) rotate(6deg); } }
+/* location: radar */
+.radar { position: absolute; top: 22px; right: 24px; width: 66px; height: 66px; border-radius: 50%; overflow: hidden; border: 1px solid rgba(55,230,255,.5); background: repeating-radial-gradient(circle, transparent 0 10px, rgba(55,230,255,.25) 10px 11px); }
+.radar::before { content: ""; position: absolute; inset: 0; background: conic-gradient(from 0deg, rgba(55,230,255,.6), transparent 28%); animation: spin 3s linear infinite; }
+.radar::after { content: ""; position: absolute; left: 62%; top: 28%; width: 6px; height: 6px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 10px var(--ember); animation: pulse 1.6s infinite; }
+/* education: build bar */
+.build { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 11px; color: var(--cy); }
+.build i { flex: 1; height: 5px; border-radius: 3px; position: relative; overflow: hidden; background: rgba(255,255,255,.08); }
+.build i::after { content: ""; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, var(--cy), var(--ember)); animation: loadbar 2.2s ease-in-out infinite; }
+.build b { font-weight: 400; color: #27c93f; animation: okp 2.2s infinite; }
+@keyframes loadbar { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+@keyframes okp { 0%, 60% { opacity: 0; } 75%, 100% { opacity: 1; } }
+/* film & style: light sweep + hat tip */
+.b-style::after { content: ""; position: absolute; top: 0; bottom: 0; width: 35%; left: -50%; pointer-events: none; transform: skewX(-18deg); background: linear-gradient(100deg, transparent, rgba(255,224,168,.16), transparent); animation: sweepS 5s ease-in-out infinite; }
+@keyframes sweepS { 0%, 55% { left: -50%; } 100% { left: 130%; } }
+.b-style .ico { transform-origin: 30% 100%; animation: tip 3.4s ease-in-out infinite; }
+@keyframes tip { 0%, 60%, 100% { transform: rotate(0); } 70% { transform: rotate(-16deg); } 80% { transform: rotate(5deg); } }
+/* private: scanning bars + lock */
+.lock { position: absolute; top: 22px; right: 24px; font-size: 26px; animation: lockp 2.6s ease-in-out infinite; }
+@keyframes lockp { 50% { transform: scale(1.18) rotate(-8deg); } }
+.redact { position: relative; overflow: hidden; }
+.redact::after { content: ""; position: absolute; inset: 0; width: 30%; background: linear-gradient(90deg, transparent, rgba(255,106,31,.55), transparent); animation: scanx 2.6s linear infinite; }
+.redact + .redact::after { animation-delay: -1.3s; }
+@keyframes scanx { from { transform: translateX(-120%); } to { transform: translateX(420%); } }
+/* music + social */
+.b-music .btn { animation: glowp 2.6s ease-in-out infinite; }
+@keyframes glowp { 50% { box-shadow: 0 0 26px rgba(255,106,31,.6); } }
+.soc .btn::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.3), transparent); animation: shim 3.6s infinite; }
+@keyframes shim { 60%, 100% { left: 130%; } }
+
+.b-music { grid-column: span 2; background: radial-gradient(360px circle at 100% 0%, rgba(55,230,255,.18), transparent 60%), linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.01)); }
+.b-music .btn { margin-top: 10px; display: inline-block; }
+.eq { position: absolute; top: 24px; right: 26px; display: flex; gap: 5px; align-items: flex-end; height: 56px; }
+.eq i { width: 7px; height: 100%; border-radius: 4px; background: linear-gradient(var(--cy), var(--ember)); animation: eq 1s ease-in-out infinite; animation-delay: var(--d); transform-origin: bottom; }
+@keyframes eq { 0%, 100% { transform: scaleY(.2); } 50% { transform: scaleY(1); } }
+.b-edu { grid-column: span 2; }
+.pin { position: absolute; top: 30px; left: 28px; width: 14px; height: 14px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 14px var(--ember); }
+.pin::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid var(--ember); animation: ring 2s infinite; }
+@keyframes ring { to { transform: scale(2.2); opacity: 0; } }
+.redact { height: 10px; margin-bottom: 8px; border-radius: 3px; background: repeating-linear-gradient(90deg, #232830 0 8px, #14181d 8px 16px); }
+.b-social { grid-column: span 4; min-height: 0; flex-direction: row; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 18px; }
+.soc { display: flex; gap: 10px; flex-wrap: wrap; }
+.soc .btn { display: inline-block; }
+.soc .dis { padding: 1em 1.4em; border: 1px dashed var(--line); border-radius: 4px; font-size: 12px; letter-spacing: .14em; color: var(--dim); }
+@media (max-width: 900px) {
+  .bento { grid-template-columns: repeat(2, 1fr); }
+  .b-about, .b-music, .b-edu, .b-social { grid-column: span 2; }
+  .b-about { grid-row: auto; min-height: 260px; }
+}
+@media (max-width: 520px) { .bx { padding: 22px; } .bx .ico { font-size: 32px; } }
 
 /* ---------- SECTIONS ---------- */
 section.sec { position: relative; padding: clamp(70px, 11vw, 130px) 7%; }
@@ -611,49 +780,6 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
 #boot .pb { height: 2px; background: rgba(255,255,255,.1); margin-top: 10px; }
 #boot .pb i { display: block; height: 100%; width: 0; background: var(--ember); box-shadow: 0 0 10px var(--ember); }
 
-/* modal */
-.modal {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: rgba(0,0,0,.82);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .4s, visibility .4s;
-}
-.modal.open { opacity: 1; visibility: visible; }
-.player {
-  position: relative;
-  width: min(960px, 100%);
-  aspect-ratio: 16 / 9;
-  border: 1px solid rgba(55,230,255,.4);
-  border-radius: 14px;
-  overflow: hidden;
-  background: #000;
-  box-shadow: 0 0 80px rgba(255,106,31,.25);
-  transform: scale(.94);
-  transition: transform .4s;
-}
-.modal.open .player { transform: none; }
-.player video, .player iframe, .player canvas#tc { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: auto; }
-.close {
-  position: absolute;
-  top: 10px; right: 10px;
-  z-index: 3;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  background: rgba(0,0,0,.6);
-  cursor: pointer;
-  font-size: 18px;
-}
-.close:hover { border-color: var(--ember); color: var(--ember); }
-
 #cur {
   position: fixed;
   left: 0; top: 0;
@@ -699,8 +825,7 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
 
 <nav class="nav">
   <a class="logo" href="#top">HENN <b>&amp;</b> CO.</a>
-  <div class="links"><a href="#about">About</a><a href="#company">Company</a><a href="#story">Story</a></div>
-  <button class="pill" id="navTrailer">Trailer</button>
+  <div class="links"><a href="#about">About</a></div>
 </nav>
 
 <header class="hero" id="top">
@@ -716,15 +841,11 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
   <div class="big" aria-hidden="true">TIT KEUMHEN</div>
 
   <section class="left">
-    <div class="eyebrow"><i></i>BIRMINGHAM 1926 // CAPITAL IS FUEL</div>
+    <div class="eyebrow"><i></i>YEAR 3 // SOFTWARE DEVELOPMENT</div>
     <h1 data-t="TIT KEUMHEN">TIT KEUMHEN</h1>
     <p class="quote" id="quote" aria-live="polite"></p>
     <div class="cta">
       <button class="btn" id="ign">Light it up</button>
-      <button class="trailer" id="trailerBtn" aria-label="Watch the trailer">
-        <span class="play"></span>
-        <span class="vt"><b>Watch the Trailer</b><small>2 MIN 14 SEC</small></span>
-      </button>
     </div>
     <div class="moods"><span>Mood</span><span id="moodBtns" style="display:flex;gap:10px"></span></div>
   </section>
@@ -738,66 +859,100 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
   <div class="scroll-hint">SCROLL</div>
 </header>
 
-<div class="ticker" aria-hidden="true"><span>HENN &amp; CO. // BIRMINGHAM 1926 // CAPITAL IS FUEL // LIGHT IT UP // PRESS 1 2 3 TO SHIFT THE MOOD // SPACE TO IGNITE // T TO WATCH THE TRAILER // &nbsp;&nbsp; HENN &amp; CO. // BIRMINGHAM 1926 // CAPITAL IS FUEL //</span></div>
+<div class="ticker" aria-hidden="true"><span>HENN &amp; CO. // YEAR 3 // SOFTWARE DEVELOPMENT // KEEP BUILDING // LIGHT IT UP // PRESS 1 2 3 TO SHIFT THE MOOD // SPACE TO IGNITE // &nbsp;&nbsp; HENN &amp; CO. // KEEP BUILDING // BUILT WITH CODE //</span></div>
 
 <section class="sec" id="about">
-  <div class="tag rv">// 01 — The Man</div>
-  <h2 class="rv">Money is <em>fire</em>.<br>Spend it like you mean it.</h2>
-  <p class="lead rv">Tit Keumhen built an empire on smoke, tailoring and borrowed time. Every deal is a gamble, every handshake a fuse. Edit this text to tell your own story.</p>
-  <div class="stats">
-    <div class="stat rv"><b data-n="1926">0</b><span>Year of the rise</span></div>
-    <div class="stat rv"><b data-n="14">0</b><span>Businesses burned</span></div>
-    <div class="stat rv"><b data-n="360">0</b><span>Loyal associates</span></div>
-    <div class="stat rv"><b data-n="99">0</b><span>% Match confidence</span></div>
+  <div class="tag rv">// 01 — About me</div>
+  <h2 class="rv">Get to know <em>me</em></h2>
+  <div class="bento">
+    <article class="bx b-about rv" data-tilt>
+      <div class="codebg" aria-hidden="true"><div class="ci"><pre><span class="c">// about.js</span>
+<span class="k">const</span> <span class="f">dev</span> = {
+  name: <span class="s">"Tit Keumhen"</span>,
+  year: <span class="n">3</span>,
+  major: <span class="s">"Software Development"</span>,
+  school: <span class="s">"Norton University"</span>,
+  loves: <span class="s">"writing code"</span>,
+  learning: <span class="k">true</span>,
+};
+
+<span class="k">function</span> <span class="f">build</span>(idea) {
+  <span class="k">const</span> app = <span class="f">code</span>(idea);
+  <span class="k">return</span> <span class="f">ship</span>(app);
+}
+
+<span class="k">while</span> (dev.learning) {
+  <span class="f">practice</span>();
+  <span class="f">debug</span>();
+  <span class="f">repeat</span>();
+}
+
+<span class="c">// keep building...</span>
+
+</pre></div></div>
+      <img class="me" src="me.webp" alt="Portrait of Tit Keumhen in a dark suit and blue tie" width="640" height="626">
+      <div class="blob" aria-hidden="true"></div>
+      <span class="tok t1" aria-hidden="true">&lt;/&gt;</span>
+      <span class="tok t2" aria-hidden="true">{ }</span>
+      <span class="tok t3" aria-hidden="true">01</span>
+      <span class="tok t4" aria-hidden="true">git</span>
+      <span class="chip">About</span>
+      <div class="about-txt">
+        <h3 id="aName"></h3>
+        <p class="lede" id="aBio"></p>
+        <ul class="facts">
+          <li>🎓 Year 3, Norton University</li>
+          <li>💻 Software Development</li>
+        </ul>
+      </div>
+    </article>
+    <article class="bx b-music rv" data-tilt>
+      <div class="eq" aria-hidden="true"><i style="--d:.0s"></i><i style="--d:.2s"></i><i style="--d:.4s"></i><i style="--d:.1s"></i><i style="--d:.5s"></i><i style="--d:.3s"></i><i style="--d:.15s"></i></div>
+      <h3>Music</h3>
+      <p>I post musical instrument videos on TikTok.</p>
+      <div id="musicBtn"></div>
+    </article>
+    <article class="bx b-game rv" data-tilt>
+      <div class="ico">🎮</div>
+      <div class="g-hud" aria-hidden="true"><span class="hp">♥ ♥ ♥</span><span class="ps">PRESS START</span></div>
+      <h3>Computer Games</h3>
+      <p>How I unwind and recharge.</p>
+    </article>
+    <article class="bx b-loc rv" data-tilt>
+      <div class="pin" aria-hidden="true"></div>
+      <div class="radar" aria-hidden="true"></div>
+      <h3>Phnom Penh</h3>
+      <p>Cambodia · Open to collaborations</p>
+    </article>
+    <article class="bx b-edu rv" data-tilt>
+      <div class="ico">🎓</div>
+      <h3>Software Development</h3>
+      <p>Year 3 student at Norton University. I love turning ideas into apps and web pages like this one.</p>
+      <div class="build" aria-hidden="true"><span>$ npm run build</span><i></i><b>✔ done</b></div>
+    </article>
+    <article class="bx b-style rv" data-tilt>
+      <div class="ico">🎩</div>
+      <h3>Film &amp; Style</h3>
+      <p>Period dramas, sharp suits and flat caps inspire everything I make.</p>
+    </article>
+    <article class="bx b-priv rv" data-tilt>
+      <div class="lock" aria-hidden="true">🔒</div>
+      <div class="redact"></div><div class="redact" style="width:70%"></div>
+      <h3>Private by design</h3>
+      <p>Hometown, phone and email stay offline.</p>
+    </article>
+    <article class="bx b-social rv">
+      <h3>Find me online</h3>
+      <div class="soc" id="soc"></div>
+    </article>
   </div>
 </section>
 
-<section class="sec" id="company">
-  <div class="tag rv">// 02 — The Company</div>
-  <h2 class="rv">The crew behind <em>the flame</em></h2>
-  <div class="cards">
-    <article class="card rv" data-tilt><div class="no">01</div><h3>The Founder</h3><p>Fedora low, cigarette lit. Decides who rises and who turns to ash.</p><span class="chip">Strategy</span></article>
-    <article class="card rv" data-tilt><div class="no">02</div><h3>The Accountant</h3><p>Knows exactly how much every favour costs, and when it comes due.</p><span class="chip">Capital</span></article>
-    <article class="card rv" data-tilt><div class="no">03</div><h3>The Enforcer</h3><p>Quiet in the doorway. Loud when the debt is not paid.</p><span class="chip">Security</span></article>
-  </div>
-</section>
+<footer><span>© 2026 HENN &amp; CO.</span><span>BUILT WITH CODE</span></footer>
 
-<section class="sec" id="story">
-  <div class="tag rv">// 03 — The Story</div>
-  <h2 class="rv">From spark to <em>inferno</em></h2>
-  <div class="timeline">
-    <div class="step rv"><small>1926 — SPRING</small><h4>The first spark</h4><p>A small tailoring shop in Birmingham becomes the front for something bigger.</p></div>
-    <div class="step rv"><small>1926 — SUMMER</small><h4>Fuel the fire</h4><p>Capital flows in. Friends multiply. Nobody asks where it comes from.</p></div>
-    <div class="step rv"><small>1926 — WINTER</small><h4>Until it runs out</h4><p>The bigger the flame, the faster the money burns. Then the friends go quiet.</p></div>
-  </div>
-</section>
-
-<div class="final rv">
-  <h2>The fire is waiting.</h2>
-  <p>Watch the trailer, then decide whether you are fuel or flame.</p>
-  <div class="cta">
-    <button class="trailer" id="trailerBtn2"><span class="play"></span><span class="vt"><b>Watch the Trailer</b><small>BIRMINGHAM 1926</small></span></button>
-  </div>
-</div>
-
-<footer><span>© 1926 HENN &amp; CO.</span><span>CAPITAL IS FUEL</span></footer>
-
-<!-- Trailer modal -->
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Trailer">
-  <div class="player" id="player">
-    <button class="close" id="close" aria-label="Close">✕</button>
-    <canvas id="tc"></canvas>
-  </div>
-</div>
 <div id="cur"></div>
 
 <script>
-/* ===== CONFIG: set your trailer here =====
-   TRAILER_URL = 'trailer.mp4'                          -> plays a local video file
-   TRAILER_URL = 'https://www.youtube.com/embed/XXXXXXXX' -> plays a YouTube embed
-   leave '' to show the built-in animated title card */
-const TRAILER_URL = '';
-
 const $ = id => document.getElementById(id);
 const stage = $('top'), scene = $('scene'), bg = $('bg'), hero = $('hero'), spot = $('spot'), ret = $('ret'), rt = $('rt'), cur = $('cur');
 const IW = 1376, IH = 768;
@@ -806,6 +961,51 @@ const mob = matchMedia('(max-width:760px),(max-aspect-ratio:1/1)');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 const fine = matchMedia('(pointer:fine)').matches;
 if (!fine) cur.remove();
+
+/* ================== EDIT YOUR PROFILE HERE ==================
+   Only put what you are happy for the public to see.
+   Keep school, hometown, phone, email and exact address private.
+   (Hobby and card texts are in the HTML section with id="about".) */
+const PROFILE = {
+  name: 'Tit Keumhen',
+  bio: 'Year-3 software dev student who loves to code.',
+  links: [
+    { label: 'TikTok · Keum Hen', url: 'https://www.tiktok.com/@keumhen2507' },
+    { label: 'TikTok · Henn', url: '' }, /* add the link when you remember the username */
+    { label: 'Facebook', url: 'https://facebook.com/keum.hen.5' }
+  ]
+};
+(function () {
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  $('aName').textContent = PROFILE.name;
+  $('aBio').textContent = PROFILE.bio;
+  const a = l => '<a class="btn" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + '</a>';
+  $('soc').innerHTML = PROFILE.links.map(l => l.url ? a(l) : '<span class="dis">' + esc(l.label) + '</span>').join('');
+  const first = PROFILE.links.find(l => l.url);
+  if (first) $('musicBtn').innerHTML = '<a class="btn" href="' + esc(PROFILE.links[0].url) + '" target="_blank" rel="noopener noreferrer">Watch on TikTok</a>';
+})();
+/* typewriter for the About bio */
+(function () {
+  const el = $('aBio'), card = document.querySelector('.b-about'), full = PROFILE.bio;
+  if (!el || !card || reduce) return;
+  const io2 = new IntersectionObserver(es => {
+    if (!es[0].isIntersecting) return;
+    io2.disconnect();
+    el.style.minHeight = el.offsetHeight + 'px';
+    el.textContent = '';
+    let i = 0;
+    setTimeout(function step() {
+      el.textContent = full.slice(0, i);
+      const c = document.createElement('span'); c.className = 'cur-t'; el.appendChild(c);
+      if (i++ < full.length) setTimeout(step, 38); else setTimeout(() => c.remove(), 1500);
+    }, 500);
+  }, { threshold: .4 });
+  io2.observe(card);
+})();
+/* duplicate the background code so the scroll loops seamlessly */
+document.querySelectorAll('.codebg .ci').forEach(ci => ci.insertAdjacentHTML('beforeend', ci.innerHTML));
+
+
 
 /* ---------- boot ---------- */
 (function () {
@@ -903,10 +1103,10 @@ function parallax(x, y) {
   bg.style.transform = 'translate(' + x * -16 + 'px,' + y * -9 + 'px) scale(1.08)';
   hero.style.transform = 'translate(' + x * -42 + 'px,' + y * -22 + 'px) scale(1.08)';
 }
-document.querySelectorAll('.btn,.trailer,.pill,.moods button').forEach(el => {
+document.querySelectorAll('.btn,.pill,.moods button').forEach(el => {
   el.addEventListener('pointerenter', () => cur.classList.add('hot'));
   el.addEventListener('pointerleave', () => { cur.classList.remove('hot'); el.style.transform = ''; });
-  if (el.matches('.btn,.trailer')) {
+  if (el.matches('.btn')) {
     el.addEventListener('pointermove', e => {
       const r = el.getBoundingClientRect();
       el.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .15) + 'px,' + ((e.clientY - r.top - r.height / 2) * .25) + 'px)';
@@ -1079,78 +1279,17 @@ document.querySelectorAll('[data-tilt]').forEach(c => {
   c.addEventListener('pointerleave', () => { c.style.transform = ''; });
 });
 
-/* ---------- trailer modal ---------- */
-const modal = $('modal'), player = $('player'), tcv = $('tc'), tg = tcv.getContext('2d');
-let media = null, raf = 0, t0 = 0, opener = null;
-
-function titleCard(t) {
-  const w = tcv.width, h = tcv.height, s = (t - t0) / 1000;
-  tg.fillStyle = '#050608'; tg.fillRect(0, 0, w, h);
-  const gr = tg.createRadialGradient(w * .5, h * .6, 0, w * .5, h * .6, w * .6);
-  gr.addColorStop(0, 'rgba(255,106,31,' + (.25 + Math.sin(s * 3) * .05) + ')');
-  gr.addColorStop(1, 'rgba(0,0,0,0)');
-  tg.fillStyle = gr; tg.fillRect(0, 0, w, h);
-  tg.strokeStyle = 'rgba(55,230,255,.12)'; tg.lineWidth = 1;
-  for (let x = 0; x < w; x += 48) { tg.beginPath(); tg.moveTo(x, 0); tg.lineTo(x, h); tg.stroke(); }
-  for (let y = 0; y < h; y += 48) { tg.beginPath(); tg.moveTo(0, y); tg.lineTo(w, y); tg.stroke(); }
-  const a = Math.min(1, s / 1.4), fs = Math.max(22, w / 14);
-  tg.globalAlpha = a;
-  tg.textAlign = 'center';
-  tg.fillStyle = '#ff6a1f'; tg.shadowColor = '#ff6a1f'; tg.shadowBlur = 30;
-  tg.font = '800 ' + fs + 'px Unbounded, Arial Black, sans-serif';
-  tg.fillText('TIT KEUMHEN', w / 2, h * .5);
-  tg.shadowBlur = 0;
-  tg.fillStyle = '#37e6ff';
-  tg.font = '400 ' + Math.max(10, w / 70) + 'px JetBrains Mono, monospace';
-  tg.fillText('HENN & CO.  //  BIRMINGHAM 1926  //  COMING SOON', w / 2, h * .5 + fs * .8);
-  tg.globalAlpha = 1;
-  const sy = (s * 120) % h;
-  tg.fillStyle = 'rgba(55,230,255,.15)'; tg.fillRect(0, sy, w, 3);
-  raf = requestAnimationFrame(titleCard);
-}
-function openTrailer(from) {
-  opener = from || document.activeElement;
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (TRAILER_URL) {
-    tcv.style.display = 'none';
-    if (/youtube|vimeo/.test(TRAILER_URL)) {
-      media = document.createElement('iframe');
-      media.src = TRAILER_URL + (TRAILER_URL.includes('?') ? '&' : '?') + 'autoplay=1';
-      media.allow = 'autoplay; fullscreen';
-      media.allowFullscreen = true;
-    } else {
-      media = document.createElement('video');
-      media.src = TRAILER_URL; media.controls = true; media.autoplay = true; media.playsInline = true;
-    }
-    player.appendChild(media);
-  } else {
-    tcv.style.display = 'block';
-    tcv.width = player.clientWidth; tcv.height = player.clientHeight;
-    t0 = performance.now();
-    raf = requestAnimationFrame(titleCard);
-  }
-  $('close').focus();
-}
-function closeTrailer() {
-  modal.classList.remove('open');
-  document.body.style.overflow = '';
-  cancelAnimationFrame(raf);
-  if (media) { media.remove(); media = null; }
-  if (opener && opener.focus) opener.focus();
-}
-['trailerBtn', 'trailerBtn2', 'navTrailer'].forEach(id => $(id).addEventListener('click', e => openTrailer(e.currentTarget)));
-$('close').onclick = closeTrailer;
-modal.addEventListener('click', e => { if (e.target === modal) closeTrailer(); });
+/* ---------- navbar: transparent on top, glass after scroll ---------- */
+const navEl = document.querySelector('.nav');
+const navCheck = () => navEl.classList.toggle('solid', scrollY > 80);
+addEventListener('scroll', navCheck, { passive: true });
+navCheck();
 
 /* ---------- keyboard ---------- */
 addEventListener('keydown', e => {
-  if (e.key === 'Escape' && modal.classList.contains('open')) { closeTrailer(); return; }
-  if (modal.classList.contains('open')) return;
-  if (e.target.closest && e.target.closest('button')) return;
+  if (e.target.closest && e.target.closest('button,input')) return;
   if (e.key >= '1' && e.key <= '3') mb.children[e.key - 1].click();
   else if (e.code === 'Space') { e.preventDefault(); ign.click(); }
-  else if (e.key.toLowerCase() === 't') openTrailer(document.body);
 });
 </script>
 </body>
