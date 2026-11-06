@@ -618,7 +618,7 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
 #boot .pb { height: 2px; background: rgba(255,255,255,.1); margin-top: 10px; }
 #boot .pb i { display: block; height: 100%; width: 0; background: var(--ember); box-shadow: 0 0 10px var(--ember); }
 
-/* modal */
+/* modal / iron-faceplate trailer */
 .modal {
   position: fixed;
   inset: 0;
@@ -626,7 +626,7 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
   display: grid;
   place-items: center;
   padding: 20px;
-  background: rgba(0,0,0,.82);
+  background: rgba(0,0,0,.86);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   opacity: 0;
@@ -636,30 +636,163 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
 .modal.open { opacity: 1; visibility: visible; }
 .player {
   position: relative;
-  width: min(960px, 100%);
+  width: min(1040px, 100%);
   aspect-ratio: 16 / 9;
   border: 1px solid rgba(55,230,255,.4);
   border-radius: 14px;
   overflow: hidden;
-  background: #000;
+  background: radial-gradient(900px circle at 78% 40%, #1b1511, #050608 70%);
   box-shadow: 0 0 80px rgba(255,106,31,.25);
   transform: scale(.94);
   transition: transform .4s;
 }
 .modal.open .player { transform: none; }
-.player video, .player iframe, .player canvas#tc { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: auto; }
-.close {
+.player video, .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 2; }
+.tbtn {
   position: absolute;
-  top: 10px; right: 10px;
-  z-index: 3;
+  top: 10px;
+  z-index: 8;
   width: 38px; height: 38px;
   border-radius: 50%;
   border: 1px solid var(--line);
   background: rgba(0,0,0,.6);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 15px;
 }
-.close:hover { border-color: var(--ember); color: var(--ember); }
+#close { right: 10px; }
+#mute { right: 56px; }
+#replay { right: 102px; }
+.tbtn:hover { border-color: var(--ember); color: var(--ember); }
+.tbtn.off { opacity: .45; }
+#tc { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+.cine { position: absolute; inset: 0; }
+
+/* the portrait */
+.face {
+  position: absolute;
+  top: 0; right: 0;
+  height: 100%;
+  aspect-ratio: 1363 / 1154;
+  perspective: 900px;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 24%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 24%);
+}
+.face .photo {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(.1) contrast(1.1) saturate(.5);
+  transition: filter 1.3s;
+}
+.face.lit .photo { filter: brightness(1.02) contrast(1.06) saturate(.95); }
+.flashfx {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 51% 40%, rgba(255,230,190,.85), rgba(255,106,31,.25) 35%, transparent 60%);
+}
+.flashfx.f { animation: flsh 1s ease-out; }
+@keyframes flsh { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 0; } }
+
+/* the faceplate (brass + gunmetal) */
+.plate {
+  position: absolute;
+  left: 34%; top: 24.5%;
+  width: 34%; height: 33%;
+  transform-origin: 50% 0;
+  backface-visibility: hidden;
+  filter: drop-shadow(0 10px 16px rgba(0,0,0,.8));
+  transition: transform .55s cubic-bezier(.3,1.4,.5,1), opacity .5s;
+}
+.plate svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.plate .eyes { opacity: .12; transition: opacity .3s; }
+.plate.on .eyes { opacity: 1; animation: eflick .18s 3; }
+@keyframes eflick { 50% { opacity: .2; } }
+.plate .core { opacity: .2; }
+.plate.on .core { opacity: 1; animation: pulse 1.6s infinite; transform-origin: 61px 12px; }
+.plate.pop { transform: translateZ(26px) scale(1.04); }
+.plate.lift { transform: translateY(-14%) rotateX(-82deg) scale(.92); transition: transform 1.35s cubic-bezier(.65,0,.25,1); }
+.plate.gone { opacity: 0; }
+
+/* scan overlay on the revealed face */
+.brk { position: absolute; left: 33%; top: 23%; width: 36%; height: 36%; opacity: 0; transition: opacity .6s; pointer-events: none; }
+.face.scan .brk { opacity: 1; }
+.brk i { position: absolute; width: 18px; height: 18px; border: 0 solid var(--cy); }
+.brk i:nth-child(1) { left: 0; top: 0; border-width: 2px 0 0 2px; }
+.brk i:nth-child(2) { right: 0; top: 0; border-width: 2px 2px 0 0; }
+.brk i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 2px 2px; }
+.brk i:nth-child(4) { right: 0; bottom: 0; border-width: 0 2px 2px 0; }
+.scanline {
+  position: absolute;
+  left: 32%; width: 38%;
+  top: 23%;
+  height: 2px;
+  background: var(--cy);
+  box-shadow: 0 0 16px var(--cy), 0 0 40px var(--cy);
+  opacity: 0;
+  pointer-events: none;
+}
+.face.scan .scanline { animation: sweep 1.5s ease-in-out 2; }
+@keyframes sweep { 0% { top: 23%; opacity: 0; } 12%, 88% { opacity: .9; } 100% { top: 60%; opacity: 0; } }
+
+/* text column */
+.hudtxt {
+  position: absolute;
+  left: 5%; top: 0; bottom: 0;
+  width: 46%;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+.log {
+  font: inherit;
+  font-size: clamp(9px, 1.05vw, 12px);
+  line-height: 2;
+  color: var(--cy);
+  letter-spacing: .1em;
+  min-height: 8.2em;
+  white-space: pre;
+}
+.tt, .sub, .soon { opacity: 0; transform: translateY(16px); transition: opacity .9s, transform .9s; }
+.tt {
+  font-family: var(--disp);
+  font-weight: 800;
+  font-size: clamp(20px, 4vw, 52px);
+  line-height: 1.05;
+  letter-spacing: .05em;
+  color: var(--ember);
+  text-shadow: 0 0 28px rgba(255,106,31,.6);
+}
+.sub { font-size: clamp(9px, 1vw, 12px); letter-spacing: .26em; color: var(--gold); transition-delay: .25s; }
+.soon {
+  align-self: flex-start;
+  padding: 6px 12px;
+  border: 1px solid var(--ember);
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: .3em;
+  color: var(--ember);
+  transition-delay: .5s;
+}
+.cine.title .tt, .cine.title .sub, .cine.title .soon { opacity: 1; transform: none; }
+.cine.title .log { opacity: .35; transition: opacity 1s; }
+
+@media (max-aspect-ratio: 1/1) {
+  .player { aspect-ratio: 4 / 5; width: min(520px, 100%); }
+  .face {
+    right: auto; left: 0;
+    width: 100%; height: auto;
+    -webkit-mask-image: linear-gradient(#000 72%, transparent);
+    mask-image: linear-gradient(#000 72%, transparent);
+  }
+  .hudtxt { left: 6%; right: 6%; width: auto; top: auto; bottom: 5%; justify-content: flex-end; }
+  .log { display: none; }
+  .tt { font-size: clamp(22px, 8vw, 40px); }
+}
 
 #cur {
   position: fixed;
@@ -792,7 +925,55 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
 <!-- Trailer modal -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Trailer">
   <div class="player" id="player">
-    <button class="close" id="close" aria-label="Close">✕</button>
+    <button class="tbtn" id="replay" aria-label="Replay">↻</button>
+    <button class="tbtn" id="mute" aria-label="Toggle sound">♪</button>
+    <button class="tbtn" id="close" aria-label="Close">✕</button>
+    <div class="cine" id="cine">
+      <div class="hudtxt">
+        <pre class="log" id="log"></pre>
+        <div class="tt">TIT KEUMHEN</div>
+        <div class="sub">HENN &amp; CO. // BIRMINGHAM 1926</div>
+        <div class="soon">COMING SOON</div>
+      </div>
+      <div class="face" id="face">
+        <img class="photo" id="photo" alt="Portrait of Tit Keumhen in a flat cap and dark suit" src="face.jpg">
+        <div class="brk"><i></i><i></i><i></i><i></i></div>
+        <div class="scanline"></div>
+        <div class="flashfx" id="flashfx"></div>
+        <div class="plate" id="plate">
+          <svg viewBox="0 0 122 100" aria-hidden="true">
+            <defs>
+              <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#6a7078"/><stop offset=".5" stop-color="#1f2328"/><stop offset="1" stop-color="#3d434a"/>
+              </linearGradient>
+              <linearGradient id="brass" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#8a5d24"/><stop offset=".5" stop-color="#ffd48a"/><stop offset="1" stop-color="#8a5d24"/>
+              </linearGradient>
+              <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <path d="M4 2H118V38L106 72L86 98H36L16 72L4 38Z" fill="url(#metal)" stroke="url(#brass)" stroke-width="2"/>
+            <path d="M8 6H114V30L8 30Z" fill="#fff" opacity=".07"/>
+            <path d="M10 20H112M16 72L40 60M106 72L82 60M61 22V62M46 84H76" stroke="#0a0c0e" stroke-width="1.2" fill="none" opacity=".8"/>
+            <path d="M12 24H110" stroke="#c9974a" stroke-width=".6" opacity=".7"/>
+            <g class="eyes" filter="url(#glow)">
+              <path d="M18 40L52 44L50 52L22 50Z" fill="#ff6a1f"/>
+              <path d="M104 40L70 44L72 52L100 50Z" fill="#ff6a1f"/>
+              <path d="M24 43L48 46L47 48L25 47Z" fill="#fff2cf"/>
+              <path d="M98 43L74 46L75 48L97 47Z" fill="#fff2cf"/>
+            </g>
+            <g class="core" filter="url(#glow)"><circle cx="61" cy="12" r="4.2" fill="#37e6ff"/><circle cx="61" cy="12" r="1.6" fill="#fff"/></g>
+            <g fill="url(#brass)">
+              <circle cx="11" cy="9" r="1.7"/><circle cx="111" cy="9" r="1.7"/>
+              <circle cx="11" cy="33" r="1.7"/><circle cx="111" cy="33" r="1.7"/>
+              <circle cx="30" cy="90" r="1.7"/><circle cx="92" cy="90" r="1.7"/>
+              <circle cx="22" cy="66" r="1.5"/><circle cx="100" cy="66" r="1.5"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
     <canvas id="tc"></canvas>
   </div>
 </div>
@@ -802,7 +983,7 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
 /* ===== CONFIG: set your trailer here =====
    TRAILER_URL = 'trailer.mp4'                          -> plays a local video file
    TRAILER_URL = 'https://www.youtube.com/embed/XXXXXXXX' -> plays a YouTube embed
-   leave '' to show the built-in animated title card */
+   leave '' to play the built-in faceplate-unlock intro (uses face.jpg) */
 const TRAILER_URL = '';
 
 const $ = id => document.getElementById(id);
@@ -1086,41 +1267,130 @@ document.querySelectorAll('[data-tilt]').forEach(c => {
   c.addEventListener('pointerleave', () => { c.style.transform = ''; });
 });
 
-/* ---------- trailer modal ---------- */
+/* ---------- trailer modal: faceplate unlock sequence ---------- */
 const modal = $('modal'), player = $('player'), tcv = $('tc'), tg = tcv.getContext('2d');
-let media = null, raf = 0, t0 = 0, opener = null;
+const cine = $('cine'), faceEl = $('face'), plate = $('plate'), logEl = $('log'), flashEl = $('flashfx');
+let media = null, raf = 0, opener = null, seq = [], ac = null, muted = false, embers = [];
+const at = (ms, fn) => seq.push(setTimeout(fn, ms));
+const clearSeq = () => { seq.forEach(clearTimeout); seq = []; };
 
-function titleCard(t) {
-  const w = tcv.width, h = tcv.height, s = (t - t0) / 1000;
-  tg.fillStyle = '#050608'; tg.fillRect(0, 0, w, h);
-  const gr = tg.createRadialGradient(w * .5, h * .6, 0, w * .5, h * .6, w * .6);
-  gr.addColorStop(0, 'rgba(255,106,31,' + (.25 + Math.sin(s * 3) * .05) + ')');
-  gr.addColorStop(1, 'rgba(0,0,0,0)');
-  tg.fillStyle = gr; tg.fillRect(0, 0, w, h);
-  tg.strokeStyle = 'rgba(55,230,255,.12)'; tg.lineWidth = 1;
-  for (let x = 0; x < w; x += 48) { tg.beginPath(); tg.moveTo(x, 0); tg.lineTo(x, h); tg.stroke(); }
-  for (let y = 0; y < h; y += 48) { tg.beginPath(); tg.moveTo(0, y); tg.lineTo(w, y); tg.stroke(); }
-  const a = Math.min(1, s / 1.4), fs = Math.max(22, w / 14);
-  tg.globalAlpha = a;
-  tg.textAlign = 'center';
-  tg.fillStyle = '#ff6a1f'; tg.shadowColor = '#ff6a1f'; tg.shadowBlur = 30;
-  tg.font = '800 ' + fs + 'px Unbounded, Arial Black, sans-serif';
-  tg.fillText('TIT KEUMHEN', w / 2, h * .5);
-  tg.shadowBlur = 0;
-  tg.fillStyle = '#37e6ff';
-  tg.font = '400 ' + Math.max(10, w / 70) + 'px JetBrains Mono, monospace';
-  tg.fillText('HENN & CO.  //  BIRMINGHAM 1926  //  COMING SOON', w / 2, h * .5 + fs * .8);
-  tg.globalAlpha = 1;
-  const sy = (s * 120) % h;
-  tg.fillStyle = 'rgba(55,230,255,.15)'; tg.fillRect(0, sy, w, 3);
-  raf = requestAnimationFrame(titleCard);
+/* synthesized sound effects (no audio files needed) */
+function aud() {
+  if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+  if (ac && ac.state === 'suspended') ac.resume();
+  return ac;
 }
+function noise(dur) {
+  const b = ac.createBuffer(1, ac.sampleRate * dur, ac.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  const s = ac.createBufferSource(); s.buffer = b; return s;
+}
+function env(node, vol, dur, atk) {
+  const t = ac.currentTime, g = ac.createGain();
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(vol, t + (atk || .02));
+  g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  node.connect(g); g.connect(ac.destination);
+}
+function beep(f) {
+  if (muted || !aud()) return;
+  const o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+  env(o, .05, .12); o.start(); o.stop(ac.currentTime + .14);
+}
+function servo(dur) {
+  if (muted || !aud()) return;
+  const t = ac.currentTime, o = ac.createOscillator(), bp = ac.createBiquadFilter();
+  o.type = 'sawtooth';
+  o.frequency.setValueAtTime(90, t);
+  o.frequency.exponentialRampToValueAtTime(460, t + dur);
+  bp.type = 'bandpass'; bp.frequency.value = 800; bp.Q.value = 3;
+  o.connect(bp); env(bp, .1, dur, .15);
+  o.start(); o.stop(t + dur + .05);
+}
+function hiss(dur) {
+  if (muted || !aud()) return;
+  const n = noise(dur), hp = ac.createBiquadFilter();
+  hp.type = 'highpass'; hp.frequency.value = 3200;
+  n.connect(hp); env(hp, .1, dur, .03); n.start();
+}
+function clunk() {
+  if (muted || !aud()) return;
+  const n = noise(.2), lp = ac.createBiquadFilter(), o = ac.createOscillator();
+  lp.type = 'lowpass'; lp.frequency.value = 320;
+  n.connect(lp); env(lp, .5, .18, .005); n.start();
+  o.type = 'sine'; o.frequency.setValueAtTime(110, ac.currentTime);
+  o.frequency.exponentialRampToValueAtTime(40, ac.currentTime + .25);
+  env(o, .4, .3, .005); o.start(); o.stop(ac.currentTime + .35);
+}
+function boom() {
+  if (muted || !aud()) return;
+  const o = ac.createOscillator(); o.type = 'sine';
+  o.frequency.setValueAtTime(75, ac.currentTime);
+  o.frequency.exponentialRampToValueAtTime(28, ac.currentTime + 1);
+  env(o, .55, 1.1, .01); o.start(); o.stop(ac.currentTime + 1.2);
+}
+
+/* embers + sparks overlay */
+function sparks(u, v, n) {
+  const pr = player.getBoundingClientRect(), fr = faceEl.getBoundingClientRect();
+  const k = tcv.width / pr.width;
+  const x = (fr.left - pr.left + u * fr.width) * k, y = (fr.top - pr.top + v * fr.height) * k;
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * 6.28, s = 1 + Math.random() * 5;
+    embers.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 1, g: .08, l: 1, d: .02 + Math.random() * .02, r: 1.5 + Math.random() * 3 });
+  }
+}
+function cineLoop() {
+  const w = tcv.width, h = tcv.height;
+  tg.clearRect(0, 0, w, h);
+  tg.globalCompositeOperation = 'lighter';
+  if (faceEl.classList.contains('lit') && Math.random() < .45) {
+    embers.push({ x: Math.random() * w, y: h + 5, vx: (Math.random() - .5) * .6, vy: -(.6 + Math.random() * 1.6), g: 0, l: 1, d: .004 + Math.random() * .006, r: 2 + Math.random() * 4 });
+  }
+  for (let i = embers.length - 1; i >= 0; i--) {
+    const p = embers[i];
+    p.x += p.vx; p.y += p.vy; p.vy += p.g; p.l -= p.d;
+    if (p.l <= 0) { embers.splice(i, 1); continue; }
+    tg.globalAlpha = Math.min(1, p.l);
+    tg.drawImage(spr, p.x - p.r * 3, p.y - p.r * 3, p.r * 6, p.r * 6);
+  }
+  tg.globalAlpha = 1;
+  tg.globalCompositeOperation = 'source-over';
+  raf = requestAnimationFrame(cineLoop);
+}
+
+function runCine() {
+  clearSeq();
+  cancelAnimationFrame(raf);
+  plate.className = 'plate';
+  faceEl.className = 'face';
+  cine.classList.remove('title');
+  logEl.textContent = '';
+  embers.length = 0;
+  tcv.width = player.clientWidth; tcv.height = player.clientHeight;
+  raf = requestAnimationFrame(cineLoop);
+  const L = ['> HELMET LINK ........ OK', '> SERVOS ............. ARMED', '> FACEPLATE .......... LOCKED', '> IDENTITY ........... SCANNING'];
+  at(400, () => { plate.classList.add('on'); beep(660); });
+  L.forEach((l, i) => at(900 + i * 480, () => { logEl.textContent += (i ? '\n' : '') + l; beep(1000 + i * 160); }));
+  at(3000, () => {
+    logEl.textContent = logEl.textContent.replace('LOCKED', 'UNLOCK').replace('SCANNING', 'CONFIRMED');
+    plate.classList.add('pop'); clunk(); hiss(.8); sparks(.51, .25, 36);
+  });
+  at(3700, () => {
+    plate.classList.remove('pop'); plate.classList.add('lift'); faceEl.classList.add('lit');
+    servo(1.25); flashEl.classList.remove('f'); void flashEl.offsetWidth; flashEl.classList.add('f');
+  });
+  at(4500, () => sparks(.51, .2, 30));
+  at(5000, () => { plate.classList.add('gone'); faceEl.classList.add('scan'); boom(); });
+  at(5900, () => cine.classList.add('title'));
+}
+
 function openTrailer(from) {
   opener = from || document.activeElement;
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
   if (TRAILER_URL) {
-    tcv.style.display = 'none';
+    cine.style.display = 'none'; tcv.style.display = 'none';
     if (/youtube|vimeo/.test(TRAILER_URL)) {
       media = document.createElement('iframe');
       media.src = TRAILER_URL + (TRAILER_URL.includes('?') ? '&' : '?') + 'autoplay=1';
@@ -1132,22 +1402,24 @@ function openTrailer(from) {
     }
     player.appendChild(media);
   } else {
-    tcv.style.display = 'block';
-    tcv.width = player.clientWidth; tcv.height = player.clientHeight;
-    t0 = performance.now();
-    raf = requestAnimationFrame(titleCard);
+    cine.style.display = 'block'; tcv.style.display = 'block';
+    setTimeout(runCine, 350);
   }
   $('close').focus();
 }
 function closeTrailer() {
   modal.classList.remove('open');
   document.body.style.overflow = '';
+  clearSeq();
   cancelAnimationFrame(raf);
+  if (ac && ac.state === 'running') ac.suspend();
   if (media) { media.remove(); media = null; }
   if (opener && opener.focus) opener.focus();
 }
 ['trailerBtn', 'trailerBtn2', 'navTrailer'].forEach(id => $(id).addEventListener('click', e => openTrailer(e.currentTarget)));
 $('close').onclick = closeTrailer;
+$('replay').onclick = () => { if (!TRAILER_URL) runCine(); };
+$('mute').onclick = e => { muted = !muted; e.currentTarget.classList.toggle('off', muted); };
 modal.addEventListener('click', e => { if (e.target === modal) closeTrailer(); });
 
 /* ---------- navbar: transparent on top, glass after scroll ---------- */
