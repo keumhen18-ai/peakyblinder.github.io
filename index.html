@@ -477,9 +477,69 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
   #boot { display: none; }
   .rv { opacity: 1; transform: none; }
 }
+
+/* ================= EXTRA MOTION ================= */
+#prog{position:fixed;top:0;left:0;right:0;height:3px;z-index:150;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--cy),var(--ember),var(--gold));box-shadow:0 0 12px var(--ember);pointer-events:none}
+/* drifting aurora behind the about section */
+#about{overflow:hidden}
+#about::before,#about::after{content:"";position:absolute;width:46vmax;height:46vmax;border-radius:50%;filter:blur(80px);opacity:.15;pointer-events:none;z-index:0}
+#about::before{background:var(--ember);left:-16vmax;top:8%;animation:orb1 18s ease-in-out infinite}
+#about::after{background:var(--cy);right:-20vmax;bottom:0;animation:orb2 22s ease-in-out infinite}
+#about>*{position:relative;z-index:1}
+@keyframes orb1{50%{transform:translate(18vmax,22vmax) scale(1.2)}}
+@keyframes orb2{50%{transform:translate(-20vmax,-18vmax) scale(.85)}}
+/* headings */
+.tag{display:flex;align-items:center;gap:12px}
+.tag::after{content:"";height:1px;width:0;background:linear-gradient(90deg,var(--cy),transparent);transition:width 1.2s .3s cubic-bezier(.2,.7,.2,1)}
+.tag.in::after{width:clamp(60px,18vw,180px)}
+.sec h2 em{background:linear-gradient(100deg,var(--ember) 40%,#ffe0a8 50%,var(--ember) 60%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 3.6s linear infinite}
+.sec h2.in{animation:h2in 1s cubic-bezier(.2,.7,.2,1) backwards}
+@keyframes h2in{from{letter-spacing:.3em;filter:blur(10px);opacity:0}}
+/* bento: staggered 3D entrance (backwards fill so tilt still works afterwards) */
+.bx.rv.in{animation:cardIn 1s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0) * 90ms);transition:opacity .9s,transform .25s ease-out,border-color .3s,box-shadow .3s}
+@keyframes cardIn{from{opacity:0;transform:perspective(800px) translateY(60px) rotateX(14deg) scale(.9);filter:blur(10px)}}
+.bx .ico{transition:filter .3s}
+.bx:hover .ico{filter:drop-shadow(0 0 14px rgba(255,106,31,.7))}
+.bx.b-music:hover .eq i{animation-duration:.45s}
+.bx.b-loc:hover .pin{box-shadow:0 0 28px var(--ember)}
+.b-priv:hover .redact::after{animation-duration:1s}
+/* rotating border light on every card while hovered */
+.b-edu::after,.b-loc::after,.b-music::after,.b-priv::after,.b-social::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:2;opacity:0;transition:opacity .4s;background:conic-gradient(from var(--a),transparent 0 70%,var(--cy),var(--ember),transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinA 4s linear infinite}
+.b-edu:hover::after,.b-loc:hover::after,.b-music:hover::after,.b-priv:hover::after,.b-social:hover::after{opacity:1}
+.soc .btn{animation:pop2 .7s cubic-bezier(.2,.9,.3,1.4) backwards}
+.soc .btn:nth-child(2){animation-delay:.12s}.soc .btn:nth-child(3){animation-delay:.24s}
+@keyframes pop2{from{opacity:0;transform:scale(.6) translateY(16px)}}
+/* ripple */
+.rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .7s ease-out forwards;pointer-events:none;z-index:-1}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+/* tech marquee */
+.stackwrap{position:relative;z-index:2;padding:10px 0 80px;display:flex;flex-direction:column;gap:14px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.mrow{display:flex;width:max-content;gap:14px;animation:mrow 34s linear infinite}
+.mrow.rev{animation-direction:reverse;animation-duration:40s}
+.mrow:hover{animation-play-state:paused}
+.mrow span{padding:12px 22px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:12px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;color:var(--ink);transition:transform .3s,border-color .3s,box-shadow .3s}
+.mrow span:nth-child(3n){color:var(--cy)}
+.mrow span:nth-child(3n+1){color:var(--gold)}
+.mrow span:hover{transform:translateY(-4px) scale(1.06);border-color:var(--ember);box-shadow:0 0 20px rgba(255,106,31,.4)}
+@keyframes mrow{to{transform:translateX(calc(-50% - 7px))}}
+/* outro */
+.outro{position:relative;padding:40px 7% 90px;text-align:center;overflow:hidden}
+.outro::before{content:"";position:absolute;left:50%;top:50%;width:60vmax;height:60vmax;margin:-30vmax 0 0 -30vmax;background:conic-gradient(from 0deg,transparent,rgba(255,106,31,.14),transparent 40%,rgba(55,230,255,.12),transparent 80%);filter:blur(40px);animation:spin 20s linear infinite;pointer-events:none}
+.outro h2{position:relative;font-family:var(--disp);font-weight:800;font-size:clamp(40px,11vw,170px);line-height:.95;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.28);background:linear-gradient(100deg,transparent 35%,var(--ember) 50%,transparent 65%) 0 0/260% 100%;-webkit-background-clip:text;background-clip:text;animation:shine 5s linear infinite;margin-bottom:34px}
+.outro h2 span{display:block}
+.outro h2 span:nth-child(2){animation:none;-webkit-text-stroke-color:rgba(55,230,255,.4)}
+.totop i{display:inline-block;font-style:normal;margin-left:10px;animation:up 1.4s ease-in-out infinite}
+@keyframes up{50%{transform:translateY(-6px)}}
+footer{position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--cy),var(--ember),transparent);background-size:200% 100%;animation:flow 4s linear infinite}
+@keyframes flow{to{background-position:-200% 0}}
+.links a{position:relative}
+.links a::after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:100%;background:var(--cy);transform:scaleX(0);transform-origin:right;transition:transform .35s}
+.links a:hover::after{transform:scaleX(1);transform-origin:left}
 </style>
 </head>
 <body>
+<div id="prog"></div>
 
 <div id="boot"><div class="in"><pre id="bt"></pre><div class="pb"><i id="bp"></i></div></div></div>
 
@@ -619,6 +679,16 @@ body.on .left > :nth-child(5) { animation-delay: .4s; }
       <div class="soc" id="soc"></div>
     </article>
   </div>
+</section>
+
+<div class="stackwrap" aria-hidden="true">
+  <div class="mrow"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Git</span><span>Debugging</span><span>UI Motion</span><span>Problem Solving</span><span>Ideas to Apps</span></div>
+  <div class="mrow rev"><span>Keep Building</span><span>Clean Code</span><span>Web Design</span><span>Learning Daily</span><span>Light It Up</span><span>Ship It</span><span>Practice</span><span>Repeat</span></div>
+</div>
+
+<section class="outro">
+  <h2 class="rv" aria-label="Keep building"><span>KEEP</span><span>BUILDING</span></h2>
+  <a class="btn totop rv" href="#top">Back to top<i>↑</i></a>
 </section>
 
 <footer><span>© 2026 HENN &amp; CO.</span><span>BUILT WITH CODE</span></footer>
@@ -962,6 +1032,40 @@ addEventListener('keydown', e => {
   if (e.key >= '1' && e.key <= '3') mb.children[e.key - 1].click();
   else if (e.code === 'Space') { e.preventDefault(); ign.click(); }
 });
+
+/* ================= EXTRA MOTION JS ================= */
+(function(){
+  /* scroll progress */
+  const pr=$('prog');
+  const upd=()=>{const m=document.documentElement.scrollHeight-innerHeight;pr.style.transform='scaleX('+(m>0?scrollY/m:0)+')'};
+  addEventListener('scroll',upd,{passive:true});upd();
+  /* stagger index for bento cards */
+  document.querySelectorAll('.bento .bx').forEach((c,i)=>c.style.setProperty('--i',i));
+  /* duplicate marquee rows for a seamless loop */
+  document.querySelectorAll('.mrow').forEach(r=>r.insertAdjacentHTML('beforeend',r.innerHTML));
+  /* ripple on buttons */
+  document.addEventListener('pointerdown',e=>{
+    const b=e.target.closest&&e.target.closest('.btn');if(!b)return;
+    const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)*2,s=document.createElement('span');
+    s.className='rip';s.style.cssText='width:'+d+'px;height:'+d+'px;left:'+(e.clientX-r.left-d/2)+'px;top:'+(e.clientY-r.top-d/2)+'px';
+    b.appendChild(s);setTimeout(()=>s.remove(),700);
+  });
+  /* text scramble when card titles scroll into view */
+  if(reduce)return;
+  const ch='<>/{}[]01#$%&*';
+  document.querySelectorAll('.bx h3').forEach(h=>{
+    if(h.id==='aName'||h.children.length)return;
+    const txt=h.textContent,o=new IntersectionObserver(es=>{
+      if(!es[0].isIntersecting)return;o.disconnect();
+      h.style.minHeight=h.offsetHeight+'px';
+      let n=0;const id=setInterval(()=>{
+        h.textContent=txt.split('').map((c,i)=>c===' '?' ':i<n?c:ch[Math.random()*ch.length|0]).join('');
+        if(n++>=txt.length){clearInterval(id);h.textContent=txt;h.style.minHeight=''}
+      },38);
+    },{threshold:.6});
+    o.observe(h);
+  });
+})();
 </script>
 </body>
 </html>
