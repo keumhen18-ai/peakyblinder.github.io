@@ -569,6 +569,12 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;b
 #rain{z-index:0;opacity:.4;-webkit-mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent);mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent)}
 .outro h2,.outro .btn{z-index:1}
 @media(max-width:520px){.b-term{grid-column:span 2}#term{font-size:11px}}
+
+/* symbols: fixed in place, below the hero only */
+body{position:relative}
+#sym{position:absolute;top:100vh;top:100svh;left:0;right:0;bottom:0;z-index:0;overflow:hidden;pointer-events:none}
+.sy{bottom:auto;opacity:var(--o);animation:twk var(--d) ease-in-out var(--dl) infinite;will-change:auto}
+@keyframes twk{50%{opacity:calc(var(--o) * .25)}}
 </style>
 </head>
 <body>
@@ -591,7 +597,6 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;b
   <div class="scrim"></div><div class="grid"></div>
   <canvas id="fx"></canvas>
   <div class="scan"></div><div class="grain"></div><div class="spot" id="spot"></div><div class="vig"></div>
-  <div class="hsym" id="hsym" aria-hidden="true"></div>
   <div class="ret" id="ret"><u id="rt"></u></div>
   <div class="big" aria-hidden="true">TIT KEUMHEN</div>
 
@@ -1119,15 +1124,11 @@ addEventListener('keydown', e => {
   function symbols(host,n){
     for(let i=0;i<n;i++){
       const e=document.createElement('span');e.className='sy';e.textContent=S[Math.random()*S.length|0];
-      e.style.cssText='left:'+(Math.random()*100)+'%;font-size:'+(12+Math.random()*30|0)+'px;color:'+cs[i%3]+';--d:'+(14+Math.random()*18)+'s;--dl:'+(-Math.random()*30)+'s;--o:'+(.12+Math.random()*.22)+';--dx:'+((Math.random()-.5)*160)+'px;--r:'+((Math.random()-.5)*120)+'deg';
+      e.style.cssText='top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;font-size:'+(12+Math.random()*30|0)+'px;color:'+cs[i%3]+';--d:'+(14+Math.random()*18)+'s;--dl:'+(-Math.random()*30)+'s;--o:'+(.12+Math.random()*.22)+';--dx:'+((Math.random()-.5)*160)+'px;--r:'+((Math.random()-.5)*120)+'deg';
       host.appendChild(e);
     }
   }
-  if(!reduce){
-    const m=innerWidth<760;
-    symbols($('sym'),m?14:30);
-    symbols($('hsym'),m?8:12);
-  }
+  symbols($('sym'),innerWidth<760?22:44);
   /* sliding bands: duplicate for seamless loop */
   document.querySelectorAll('.st').forEach(r=>r.insertAdjacentHTML('beforeend',r.innerHTML));
 
