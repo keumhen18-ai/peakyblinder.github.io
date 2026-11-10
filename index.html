@@ -575,6 +575,10 @@ body{position:relative}
 #sym{position:absolute;top:100vh;top:100svh;left:0;right:0;bottom:0;z-index:0;overflow:hidden;pointer-events:none}
 .sy{bottom:auto;opacity:var(--o);animation:twk var(--d) ease-in-out var(--dl) infinite;will-change:auto}
 @keyframes twk{50%{opacity:calc(var(--o) * .25)}}
+
+/* symbols: small, drifting upward, below the hero only */
+.sy{animation:drift2 var(--d) linear var(--dl) infinite;text-shadow:0 0 8px currentColor}
+@keyframes drift2{0%{transform:translate(0,0) rotate(0);opacity:0}15%{opacity:var(--o)}85%{opacity:var(--o)}100%{transform:translate(var(--dx),-360px) rotate(var(--r));opacity:0}}
 </style>
 </head>
 <body>
@@ -1124,11 +1128,11 @@ addEventListener('keydown', e => {
   function symbols(host,n){
     for(let i=0;i<n;i++){
       const e=document.createElement('span');e.className='sy';e.textContent=S[Math.random()*S.length|0];
-      e.style.cssText='top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;font-size:'+(12+Math.random()*30|0)+'px;color:'+cs[i%3]+';--d:'+(14+Math.random()*18)+'s;--dl:'+(-Math.random()*30)+'s;--o:'+(.12+Math.random()*.22)+';--dx:'+((Math.random()-.5)*160)+'px;--r:'+((Math.random()-.5)*120)+'deg';
+      e.style.cssText='top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;font-size:'+(8+Math.random()*9|0)+'px;color:'+cs[i%3]+';--d:'+(14+Math.random()*18)+'s;--dl:'+(-Math.random()*30)+'s;--o:'+(.12+Math.random()*.22)+';--dx:'+((Math.random()-.5)*160)+'px;--r:'+((Math.random()-.5)*120)+'deg';
       host.appendChild(e);
     }
   }
-  symbols($('sym'),innerWidth<760?22:44);
+  symbols($('sym'),innerWidth<760?28:56);
   /* sliding bands: duplicate for seamless loop */
   document.querySelectorAll('.st').forEach(r=>r.insertAdjacentHTML('beforeend',r.innerHTML));
 
