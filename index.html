@@ -536,10 +536,44 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;b
 .links a{position:relative}
 .links a::after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:100%;background:var(--cy);transform:scaleX(0);transform-origin:right;transition:transform .35s}
 .links a:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* ================= CODE SYMBOL MOTION ================= */
+#sym{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.hsym{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:5}
+.sy{position:absolute;bottom:-60px;font-family:var(--mono);font-weight:700;opacity:0;white-space:nowrap;text-shadow:0 0 12px currentColor;animation:syUp var(--d) linear var(--dl) infinite;will-change:transform}
+@keyframes syUp{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:var(--o)}90%{opacity:var(--o)}100%{transform:translate(var(--dx),-115vh) rotate(var(--r));opacity:0}}
+/* sliding symbol bands */
+.slideband{position:relative;z-index:2;display:flex;flex-direction:column;gap:6px;padding:26px 0;margin:30px -4%;transform:rotate(-2deg);overflow:hidden;background:linear-gradient(90deg,rgba(255,106,31,.09),rgba(55,230,255,.09));border-block:1px solid var(--line)}
+.st{display:flex;width:max-content;gap:40px;animation:slideL 30s linear infinite}
+.st.rev{animation-direction:reverse;animation-duration:36s}
+.st span{font-family:var(--disp);font-weight:800;font-size:clamp(44px,8vw,100px);line-height:1.1;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.3);white-space:nowrap;transition:color .3s}
+.st span:nth-child(4n+1){color:var(--ember);-webkit-text-stroke:0;text-shadow:0 0 28px rgba(255,106,31,.5)}
+.st span:nth-child(4n+3){color:var(--cy);-webkit-text-stroke:0;text-shadow:0 0 28px rgba(55,230,255,.45)}
+.st span:hover{color:var(--gold)}
+@keyframes slideL{to{transform:translateX(calc(-50% - 20px))}}
+/* slide-in cards from alternating sides */
+.bento .bx:nth-child(odd):not(.b-about).rv.in{animation-name:slideLeft}
+.bento .bx:nth-child(even).rv.in{animation-name:slideRight}
+@keyframes slideLeft{from{opacity:0;transform:translateX(-90px) skewX(8deg);filter:blur(10px)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(90px) skewX(-8deg);filter:blur(10px)}}
+/* live terminal */
+.b-term{grid-column:span 4;justify-content:flex-start;gap:0;min-height:0;background:rgba(5,8,10,.85)}
+.tdots{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.tdots i{width:11px;height:11px;border-radius:50%;background:#ff5f57}
+.tdots i:nth-child(2){background:#febc2e}.tdots i:nth-child(3){background:#28c840}
+.tdots span{margin-left:10px;font-size:11px;color:var(--dim);letter-spacing:.1em}
+#term{font:inherit;font-size:13px;line-height:1.9;color:var(--ink);white-space:pre-wrap;min-height:13.5em;word-break:break-word}
+#term .pr{color:var(--cy)}#term .ok{color:#28c840}#term .dm{color:var(--dim)}
+#term .cu{display:inline-block;width:8px;height:1.1em;margin-left:2px;vertical-align:-3px;background:var(--cy);box-shadow:0 0 8px var(--cy);animation:blink .8s steps(1) infinite}
+/* code rain in the outro */
+#rain{z-index:0;opacity:.4;-webkit-mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent);mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent)}
+.outro h2,.outro .btn{z-index:1}
+@media(max-width:520px){.b-term{grid-column:span 2}#term{font-size:11px}}
 </style>
 </head>
 <body>
 <div id="prog"></div>
+<div id="sym" aria-hidden="true"></div>
 
 <div id="boot"><div class="in"><pre id="bt"></pre><div class="pb"><i id="bp"></i></div></div></div>
 
@@ -557,6 +591,7 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;b
   <div class="scrim"></div><div class="grid"></div>
   <canvas id="fx"></canvas>
   <div class="scan"></div><div class="grain"></div><div class="spot" id="spot"></div><div class="vig"></div>
+  <div class="hsym" id="hsym" aria-hidden="true"></div>
   <div class="ret" id="ret"><u id="rt"></u></div>
   <div class="big" aria-hidden="true">TIT KEUMHEN</div>
 
@@ -674,6 +709,10 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;b
       <p>Hometown, phone and email stay offline.</p>
     </article>
 
+    <article class="bx b-term rv">
+      <div class="tdots" aria-hidden="true"><i></i><i></i><i></i><span>keumhen@henn-co ~ zsh</span></div>
+      <pre id="term" aria-label="Terminal animation"></pre>
+    </article>
     <article class="bx b-social rv">
       <h3>Find me online</h3>
       <div class="soc" id="soc"></div>
@@ -681,12 +720,18 @@ footer::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;b
   </div>
 </section>
 
+<div class="slideband" aria-hidden="true">
+  <div class="st"><span>&lt;/&gt;</span><span>{ }</span><span>;</span><span>=&gt;</span><span>[ ]</span><span>#!</span><span>&amp;&amp;</span><span>01</span><span>//</span><span>( )</span></div>
+  <div class="st rev"><span>git</span><span>fn()</span><span>npm</span><span>&lt;div&gt;</span><span>===</span><span>$_</span><span>0x</span><span>||</span><span>async</span><span>try{}</span></div>
+</div>
+
 <div class="stackwrap" aria-hidden="true">
   <div class="mrow"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Git</span><span>Debugging</span><span>UI Motion</span><span>Problem Solving</span><span>Ideas to Apps</span></div>
   <div class="mrow rev"><span>Keep Building</span><span>Clean Code</span><span>Web Design</span><span>Learning Daily</span><span>Light It Up</span><span>Ship It</span><span>Practice</span><span>Repeat</span></div>
 </div>
 
 <section class="outro">
+  <canvas id="rain" aria-hidden="true"></canvas>
   <h2 class="rv" aria-label="Keep building"><span>KEEP</span><span>BUILDING</span></h2>
   <a class="btn totop rv" href="#top">Back to top<i>↑</i></a>
 </section>
@@ -1065,6 +1110,71 @@ addEventListener('keydown', e => {
     },{threshold:.6});
     o.observe(h);
   });
+})();
+
+/* ================= CODE SYMBOL JS ================= */
+(function(){
+  const S=['</>','{ }',';','=>','[]','#','&&','||','01','//','()','git','fn()','npm','</div>','===','$_','0x','async','try{}'];
+  const cs=['var(--cy)','var(--ember)','var(--gold)'];
+  function symbols(host,n){
+    for(let i=0;i<n;i++){
+      const e=document.createElement('span');e.className='sy';e.textContent=S[Math.random()*S.length|0];
+      e.style.cssText='left:'+(Math.random()*100)+'%;font-size:'+(12+Math.random()*30|0)+'px;color:'+cs[i%3]+';--d:'+(14+Math.random()*18)+'s;--dl:'+(-Math.random()*30)+'s;--o:'+(.12+Math.random()*.22)+';--dx:'+((Math.random()-.5)*160)+'px;--r:'+((Math.random()-.5)*120)+'deg';
+      host.appendChild(e);
+    }
+  }
+  if(!reduce){
+    const m=innerWidth<760;
+    symbols($('sym'),m?14:30);
+    symbols($('hsym'),m?8:12);
+  }
+  /* sliding bands: duplicate for seamless loop */
+  document.querySelectorAll('.st').forEach(r=>r.insertAdjacentHTML('beforeend',r.innerHTML));
+
+  /* terminal: types forever */
+  const T=[['pr','$ git commit -m "keep building"'],['ok','✔ 1 file changed, ideas shipped'],['pr','$ npm run dev'],['dm','> compiling HENN & CO. ...'],['ok','✔ ready on localhost:3000'],['pr','$ while (learning) practice();']];
+  const term=$('term');
+  const esc=x=>x.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const line=(k,t)=>'<span class="'+k+'">'+esc(t)+'</span>';
+  if(reduce){term.innerHTML=T.map(l=>line(l[0],l[1])).join('\n');}
+  else{
+    let started=false;
+    new IntersectionObserver((es,o)=>{
+      if(!es[0].isIntersecting||started)return;started=true;o.disconnect();
+      let li=0,ci=0,done=[];
+      (function tick(){
+        if(li>=T.length){setTimeout(()=>{li=0;ci=0;done=[];tick()},3200);return}
+        const[k,t]=T[li];
+        const cur=line(k,t.slice(0,ci))+'<i class="cu"></i>';
+        term.innerHTML=done.concat(cur).join('\n');
+        if(ci<t.length){ci++;setTimeout(tick,k==='pr'?55:18)}
+        else{done.push(line(k,t));li++;ci=0;setTimeout(tick,k==='pr'?450:250)}
+      })();
+    },{threshold:.3}).observe(term);
+  }
+
+  /* code rain */
+  const rc=$('rain'),rx=rc.getContext('2d');
+  if(reduce){rc.remove();return}
+  const G='01{}<>/;=[]#$&|'.split('');
+  let rw,rh,cols,drops,vis=false,lt=0;
+  function rs(){rw=rc.width=rc.parentElement.clientWidth;rh=rc.height=rc.parentElement.clientHeight;cols=Math.ceil(rw/18);drops=Array.from({length:cols},()=>Math.random()*-40)}
+  rs();addEventListener('resize',rs);
+  new IntersectionObserver(es=>{vis=es[0].isIntersecting}).observe(rc.parentElement);
+  (function rain(t){
+    requestAnimationFrame(rain);
+    if(!vis||t-lt<55)return;lt=t;
+    rx.globalCompositeOperation='destination-out';
+    rx.fillStyle='rgba(0,0,0,.14)';rx.fillRect(0,0,rw,rh);
+    rx.globalCompositeOperation='source-over';
+    rx.font='14px JetBrains Mono, monospace';
+    for(let i=0;i<cols;i++){
+      rx.fillStyle=i%5===0?'#ff6a1f':'#37e6ff';
+      rx.fillText(G[Math.random()*G.length|0],i*18,drops[i]*18);
+      if(drops[i]*18>rh&&Math.random()>.97)drops[i]=0;
+      drops[i]+=.6+(i%3)*.2;
+    }
+  })(0);
 })();
 </script>
 </body>
